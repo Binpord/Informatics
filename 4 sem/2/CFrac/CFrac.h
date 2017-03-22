@@ -13,9 +13,12 @@ public:
 	CFrac();
 	CFrac(int, int, int);
 	void setVal(int, int, int);
+	CFrac operator-(const CFrac&);
 	CFrac operator+(const CFrac&);
-	CFrac& operator++(int);
-	CFrac& operator!();
+	CFrac operator++(int);
+	CFrac operator!();
+	CFrac operator*(const CFrac&);
+	CFrac operator/(const CFrac&);
 	int operator<(const CFrac&);
 	int operator>(const CFrac&);
 	int operator==(const CFrac&);

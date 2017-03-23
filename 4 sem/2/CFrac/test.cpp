@@ -1,5 +1,5 @@
 #include "std.h"
-#include "CFrac.h"
+#include "newCFrac.h"
 
 int main()
 {

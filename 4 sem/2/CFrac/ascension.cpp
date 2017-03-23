@@ -1,5 +1,5 @@
 #include "std.h"
-#include "CFrac.h"
+#include "newCFrac.h"
 
 void usage(char*);
 int asc(int, int, int);
@@ -27,16 +27,16 @@ int asc(int n, int m, int k)
 
 	for(int i = 0; i < m; i++)
 	{
-		//проходим 1/n оставшегося расстояния
+		// проходим 1/n оставшегося расстояния
 		pos = pos + (todo * dnm);
 		todo = todo - (todo * dnm);
 
-		//падаем на 1/k пройденного расстояния
+		// падаем на 1/k пройденного расстояния
 		todo = todo + (pos * dnm2);
 		pos = pos - (pos * dnm2);
 	}
 
-	//на выходе имеем нынешнюю позицию, когда до вершины остался метр
+	// на выходе имеем нынешнюю позицию, когда до вершины остался метр
 	CFrac meters(1, 0, 0);
 	meters = meters / todo;
 	meters.print();

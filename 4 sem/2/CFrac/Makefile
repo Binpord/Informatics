@@ -1,4 +1,4 @@
 ascension:
-	g++ -o asc ascension.cpp CFrac.cpp -I. -g2
+	g++ -o asc ascension.cpp newCFrac.cpp -I. -g2
 test:
-	g++ -o test test.cpp CFrac.cpp -I. - g2
+	g++ -o test test.cpp newCFrac.cpp -I. -g2

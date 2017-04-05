@@ -8,6 +8,7 @@ private:
 
 	CPoint getLeft();
 	CPoint getRight();
+	CPoint getCenter();
 public:
 	CRect();
 	~CRect();

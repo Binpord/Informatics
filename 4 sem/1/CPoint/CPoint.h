@@ -7,9 +7,15 @@ private:
 
 public:
 	CPoint();
+	CPoint(int, int);
 	void getVal();
-	void moveOn(int x1, int y1);
-	int diffX(CPoint a);
-	int diffY(CPoint a);
+	int GetX();
+	int GetY();
+	void moveOn(int, int);
+	void setPoint(int, int);
+	int diffX(const CPoint&) const;
+	int diffY(const CPoint&) const;
 	void print();
+	void endllessprint();
+	int operator=(CPoint);
 };

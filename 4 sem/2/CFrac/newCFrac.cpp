@@ -102,6 +102,8 @@ CFrac CFrac::operator-(const CFrac& sub)
 	}
 	// no handling if(num == 0) as there is no support of negative numbers
 	int res_num = num * sub.denom - sub.num * denom, res_denom = denom * sub.denom;
+	if(res_num == 0)
+		res_denom = 0;
 	CFrac res(res_num, res_denom);
 	res.normalize();
 	return res;

@@ -25,7 +25,7 @@ int asc(int n, int m, int k)
 {
 	CFrac pos(0, 0, 0),todo(1, 0, 0), dnm(0, 1, n), dnm2(0, 1, k);
 
-	for(int i = 0; i < m; i++)
+	for(int i = 0; i < m - 1; i++)
 	{
 		// проходим 1/n оставшегося расстояния
 		pos = pos + (todo * dnm);
@@ -36,6 +36,8 @@ int asc(int n, int m, int k)
 		pos = pos - (pos * dnm2);
 	}
 
+	pos = pos + (todo * dnm);
+	todo = todo - (todo * dnm);
 	// на выходе имеем нынешнюю позицию, когда до вершины остался метр
 	CFrac meters(1, 0, 0);
 	meters = meters / todo;

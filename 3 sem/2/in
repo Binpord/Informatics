@@ -1,0 +1,5 @@
+2 echo t1 23
+7 sleep 5
+5 ls -al
+3 echo ttt
+4 xxx t

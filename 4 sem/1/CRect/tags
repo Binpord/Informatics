@@ -1,0 +1,63 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BAD_IN	CLine/include/std.h	7;"	d
+BAD_IN	include/include/std.h	7;"	d
+BAD_IN	include/std.h	7;"	d
+CLine	CLine/CLine.cpp	/^CLine::CLine()$/;"	f	class:CLine
+CLine	CLine/CLine.cpp	/^CLine::CLine(const CPoint& s, const CPoint& e)$/;"	f	class:CLine
+CLine	CLine/CLine.h	/^class CLine $/;"	c
+CLine	include/CLine.h	/^class CLine $/;"	c
+CPoint	CLine/CPoint.h	/^class CPoint$/;"	c
+CPoint	CLine/include/CPoint.h	/^class CPoint$/;"	c
+CPoint	include/CPoint.h	/^class CPoint$/;"	c
+CPoint	include/include/CPoint.h	/^class CPoint$/;"	c
+CRect	CRect.cpp	/^CRect::CRect()$/;"	f	class:CRect
+CRect	CRect.h	/^class CRect$/;"	c
+FAIL	CLine/include/std.h	8;"	d
+FAIL	include/include/std.h	8;"	d
+FAIL	include/std.h	8;"	d
+GetLength	CLine/CLine.cpp	/^int CLine::GetLength() const$/;"	f	class:CLine
+GetLine	CLine/CLine.cpp	/^void CLine::GetLine()$/;"	f	class:CLine
+GetStart	CLine/CLine.cpp	/^CPoint CLine::GetStart() const$/;"	f	class:CLine
+Intercept	CLine/CLine.cpp	/^int CLine::Intercept(const CLine& comp, CLine* storage \/* = NULL *\/) const$/;"	f	class:CLine
+IsHor	CLine/CLine.cpp	/^bool CLine::IsHor() const$/;"	f	class:CLine
+IsIn	CRect.cpp	/^bool CRect::IsIn(const CRect& comp) const$/;"	f	class:CRect
+IsPoint	CLine/CLine.cpp	/^bool CLine::IsPoint() const$/;"	f	class:CLine
+SetLine	CLine/CLine.cpp	/^void CLine::SetLine(const CPoint& s, const CPoint& e)$/;"	f	class:CLine
+crossRect	CRect.cpp	/^CRect* CRect::crossRect(const CRect& comp) const$/;"	f	class:CRect
+dot_interception	CLine/CLine.cpp	/^int CLine::dot_interception(const CLine& hor, const CLine& vert, CLine* storage \/* = NULL *\/) const$/;"	f	class:CLine
+getCenter	CRect.cpp	/^CPoint CRect::getCenter() const$/;"	f	class:CRect
+getLeft	CRect.cpp	/^CPoint CRect::getLeft() const$/;"	f	class:CRect
+getRight	CRect.cpp	/^CPoint CRect::getRight() const$/;"	f	class:CRect
+hl	CRect.h	/^	CPoint hl, lr;$/;"	m	class:CRect
+ishor	CLine/CLine.h	/^	bool ishor;$/;"	m	class:CLine
+ishor	include/CLine.h	/^	bool ishor;$/;"	m	class:CLine
+length	CLine/CLine.h	/^	int length;$/;"	m	class:CLine
+length	include/CLine.h	/^	int length;$/;"	m	class:CLine
+line_interception	CLine/CLine.cpp	/^int CLine::line_interception(const CLine& comp1, const CLine& comp2, int dist, CLine* storage \/* = NULL *\/) const$/;"	f	class:CLine
+lr	CRect.h	/^	CPoint hl, lr;$/;"	m	class:CRect
+main	CLine/test.cpp	/^int main()$/;"	f
+make_line_interception	CLine/CLine.cpp	/^int CLine::make_line_interception(const CLine& left, const CLine& right, int dist, CLine* storage \/* = NULL *\/) const$/;"	f	class:CLine
+mirrorH	CRect.cpp	/^void CRect::mirrorH()$/;"	f	class:CRect
+mirrorV	CRect.cpp	/^void CRect::mirrorV()$/;"	f	class:CRect
+moveToPoint	CRect.cpp	/^void CRect::moveToPoint(CPoint a)$/;"	f	class:CRect
+operator =	CLine/CLine.cpp	/^int CLine::operator=(const CLine& eq)$/;"	f	class:CLine
+print	CLine/CLine.cpp	/^void CLine::print() const$/;"	f	class:CLine
+print	CRect.cpp	/^void CRect::print() const$/;"	f	class:CRect
+rotate90	CRect.cpp	/^void CRect::rotate90()$/;"	f	class:CRect
+setPoints	CRect.cpp	/^void CRect::setPoints(CPoint in_hl, CPoint in_lr)$/;"	f	class:CRect
+start	CLine/CLine.h	/^	CPoint start;			\/\/ start is low left$/;"	m	class:CLine
+start	include/CLine.h	/^	CPoint start;			\/\/ start is low left$/;"	m	class:CLine
+x	CLine/CPoint.h	/^	int x, y;$/;"	m	class:CPoint
+x	CLine/include/CPoint.h	/^	int x, y;$/;"	m	class:CPoint
+x	include/CPoint.h	/^	int x, y;$/;"	m	class:CPoint
+x	include/include/CPoint.h	/^	int x, y;$/;"	m	class:CPoint
+y	CLine/CPoint.h	/^	int x, y;$/;"	m	class:CPoint
+y	CLine/include/CPoint.h	/^	int x, y;$/;"	m	class:CPoint
+y	include/CPoint.h	/^	int x, y;$/;"	m	class:CPoint
+y	include/include/CPoint.h	/^	int x, y;$/;"	m	class:CPoint
+~CRect	CRect.cpp	/^CRect::~CRect()$/;"	f	class:CRect

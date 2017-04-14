@@ -11,12 +11,12 @@ CPoint::CPoint(int in_x, int in_y)
 	x = in_x, y = in_y;
 }
 
-int CPoint::GetX()
+int CPoint::GetX() const
 {
 	return x;
 }
 
-int CPoint::GetY()
+int CPoint::GetY() const
 {
 	return y;
 }
@@ -48,12 +48,12 @@ int CPoint::diffY(const CPoint& a) const
 	return a.y - y;
 }
 
-void CPoint::print()
+void CPoint::print() const
 {
 	printf("(%d, %d)\n", x, y);
 }
 
-void CPoint::endllessprint()
+void CPoint::endllessprint() const
 {
 	std::cout << "(" << x << ", " << y << ")";
 }

@@ -47,11 +47,13 @@ void CLine::SetLine(const CPoint& s, const CPoint& e)
 
 void CLine::GetLine()
 {
+	int tmp;
 	start.getVal();
 	std::cout << "Please, enter length and ishor (0 or 1) like length, ishor" << std::endl;
-	std::cin >> length;
-	std::cin.ignore(2);	// ignore ", "
-	std::cin >> ishor;
+	//scanf("%d, %b", &length, &ishor);
+	//std::cin >> length >> tmp >> tmp >> ishor >> tmp;			// ignore ", "
+	scanf("%d, %d", &length, &tmp);
+	ishor = tmp;
 }
 
 CLine::CLine(const CPoint& s, const CPoint& e)
@@ -59,22 +61,22 @@ CLine::CLine(const CPoint& s, const CPoint& e)
 	this->SetLine(s, e);
 }
 
-CPoint CLine::GetStart()
+CPoint CLine::GetStart() const
 {
 	return start;
 }
 
-int CLine::GetLength()
+int CLine::GetLength() const
 {
 	return length;
 }
 
-bool CLine::IsHor()
+bool CLine::IsHor() const
 {
 	return ishor;
 }
 
-bool CLine::IsPoint()
+bool CLine::IsPoint() const
 {
 	if(length != 0)
 		return false;
@@ -90,8 +92,13 @@ int CLine::operator=(const CLine& eq)
 	return 1;
 }
 
-void CLine::print()
+void CLine::print() const
 {
+	if(length == 0)
+	{
+		start.print();
+		return;
+	}
 	CPoint tmp;
 	tmp.setPoint(tmp.diffX(this->start), tmp.diffY(this->start));
 	if(ishor == false)
@@ -107,9 +114,9 @@ void CLine::print()
 //===============================================================================================
 // everything beneath this line is for the public Intercept function
 
-int CLine::dot_interception(const CLine& hor, const CLine& vert, CLine* storage /* = NULL */)
+int CLine::dot_interception(const CLine& hor, const CLine& vert, CLine* storage /* = NULL */) const
 {
-	int xrange = hor.start.diffX(vert.start), yrange = hor.start.diffY(vert.start);		// xrange = hor.start - vert.start, yrange = hor.start - vert.start
+	int xrange = vert.start.diffX(hor.start), yrange = vert.start.diffY(hor.start);		// xrange = hor.start - vert.start, yrange = hor.start - vert.start
 												// start = low left
 
 	if(xrange > 0)			// no interception as hor.start (left) located right from the vert.start
@@ -128,7 +135,7 @@ int CLine::dot_interception(const CLine& hor, const CLine& vert, CLine* storage 
 				if(storage != NULL)
 				{
 					CPoint res_start;
-					res_start.setPoint(res_start.diffX(vert.start), res_start.diffY(hor.start));
+					res_start.moveOn(res_start.diffX(vert.start), res_start.diffY(hor.start));
 					storage->start = res_start;
 					storage->length = 0;
 				}
@@ -140,7 +147,7 @@ int CLine::dot_interception(const CLine& hor, const CLine& vert, CLine* storage 
 	return -1;			// never here
 }
 
-int CLine::make_line_interception(const CLine& left, const CLine& right, int dist, CLine* storage /* = NULL */)
+int CLine::make_line_interception(const CLine& left, const CLine& right, int dist, CLine* storage /* = NULL */) const
 {
 	if(left.length >= dist + right.length)
 	{
@@ -160,14 +167,14 @@ int CLine::make_line_interception(const CLine& left, const CLine& right, int dis
 	}
 }
 
-int CLine::line_interception(const CLine& comp1, const CLine& comp2, int dist, CLine* storage /* = NULL */)
+int CLine::line_interception(const CLine& comp1, const CLine& comp2, int dist, CLine* storage /* = NULL */) const
 {
 	/*
 	 * xrange = start - comp, if xrange < 0 (start located left from comp) and
-	 * (-xrange) < length or if xrange > 0 (comp located left from start) and
+	 * (-xrange) > length or if xrange > 0 (comp located left from start) and
 	 * xrange < comp.length, than no interception
 	 */
-	if((dist > 0 && dist < comp2.length) || (dist < 0 && dist > comp1.length))
+	if((dist > 0 && dist > comp2.length) || (dist < 0 && (-1) * dist > comp1.length))
 		return 2;
 	else if(dist > 0)		// line-interception, comp located left from start
 		return make_line_interception(comp2, comp1, dist, storage);
@@ -176,9 +183,9 @@ int CLine::line_interception(const CLine& comp1, const CLine& comp2, int dist, C
 }
 
 // mind that storage will be used in output
-int CLine::Intercept(const CLine& comp, CLine* storage /* = NULL */)
+int CLine::Intercept(const CLine& comp, CLine* storage /* = NULL */) const
 {
-	int xrange = start.diffX(comp.start), yrange = start.diffY(comp.start);		// xrange = start - comp, yrange = start - comp
+	int xrange = comp.start.diffX(start), yrange = comp.start.diffY(start);		// xrange = start - comp, yrange = start - comp
 											// start = low left
 /*
  * Moved to the dot-interception function

@@ -1,12 +1,13 @@
 #!/bin/bash
 
-make -B CRect
 cd CLine/
 ./make-lib.sh
-mv CPoint.o ../
-mv CLine.o ../
+mv ./objects/CPoint.o ../objects
+mv ./objects/CLine.o ../objects
 cd ../
-ar -rc libfig.a CRect.o CLine.o CPoint.o
+make -B CRect
+mv ./CRect.o ./objects
+ar -rc libfig.a ./objects/CRect.o ./objects/CLine.o ./objects/CPoint.o
 ranlib libfig.a
 mv libfig.a lib/
 #rm CPoint.o

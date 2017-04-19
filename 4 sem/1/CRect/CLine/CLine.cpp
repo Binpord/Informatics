@@ -252,4 +252,7 @@ int CLine::Intercept(const CLine& comp, CLine* storage /* = NULL */) const
 		else
 			return line_interception(*this, comp, yrange, storage);
 	}
+
+	// never here
+	return -1;
 }

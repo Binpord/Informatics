@@ -277,7 +277,7 @@ CRect* CRect::crossRect(const CRect& comp) const
 	}
 	else
 	{
-		delete[] Res;
+		delete Res;
 		return NULL;
 	}
 }

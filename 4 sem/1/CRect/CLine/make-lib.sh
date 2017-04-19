@@ -1,9 +1,11 @@
 #!/bin/bash
 
-make -B CLine
 cd ../../CPoint
 make -B CPoint
-mv CPoint.o ../CRect/CLine/
+mv CPoint.o ../CRect/CLine/objects
 cd ../CRect/CLine/
-#ar -rc libfig.a CLine.o CPoint.o
-#ranlib libfig.a
+make -B CLine
+mv CLine.o ./objects
+ar -rc libfig.a ./objects/CLine.o ./objects/CPoint.o
+ranlib libfig.a
+mv libfig.a lib/

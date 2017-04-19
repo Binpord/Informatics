@@ -1,4 +1,6 @@
 CRect:
-	g++ -c -g2 CRect.cpp -I./include -L./lib -lfig
+	cp CRect.h include/
+	clang -c -g2 CRect.cpp -I./include
 test:
-	g++ -o test -g2 test.cpp -I./include -L./lib -lfig
+	cp CRect.h include/
+	clang -o test -g2 test.cpp -I./include -L./lib -lfig -lstdc++

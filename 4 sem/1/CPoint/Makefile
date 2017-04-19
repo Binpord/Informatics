@@ -1,2 +1,2 @@
 CPoint:
-	g++ -c CPoint.cpp
+	clang -c CPoint.cpp

@@ -63,3 +63,9 @@ int CPoint::operator=(CPoint comp)
 	x = comp.x, y = comp.y;
 	return true;
 }
+
+std::ostream& CPoint::put(std::ostream& s)
+{
+	std::cout << "(" << x << ", " << y << ")";
+	return s; 
+}

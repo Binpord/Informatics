@@ -19,8 +19,11 @@ void CRect::print() const
 
 void CRect::setPoints(const CPoint& in_hl, const CPoint& in_lr)
 {
-	hl.moveOn(hl.diffX(in_hl), hl.diffY(in_hl));
-	lr.moveOn(lr.diffX(in_lr), lr.diffY(in_lr));
+	if(in_hl.diffX(in_lr) > 0 && in_hl.diffY(in_lr) < 0)		// setting points only if input is correct
+	{
+		hl.moveOn(hl.diffX(in_hl), hl.diffY(in_hl));
+		lr.moveOn(lr.diffX(in_lr), lr.diffY(in_lr));
+	}
 }
 
 CPoint CRect::getLeft() const

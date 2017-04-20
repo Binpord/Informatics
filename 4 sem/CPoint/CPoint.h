@@ -19,5 +19,5 @@ public:
 	void endllessprint() const;
 	int operator=(CPoint);
 	std::ostream& put(std::ostream&);
-	std::ostream& operator<<(std::ostream&, CPoint&);
+	//std::ostream& operator<<(std::ostream&, CPoint&);
 };

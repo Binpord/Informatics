@@ -1,15 +1,15 @@
 #!/bin/bash
 
-cd CLine/
+cd ../CLine/
 ./make-lib.sh
-mv ./objects/CPoint.o ../objects
-mv ./objects/CLine.o ../objects
-cd ../
+mv ./tmp/CPoint.o ../CRect/tmp
+mv ./tmp/CLine.o ../CRect/tmp
+cd ../CRect
 make -B CRect
-mv ./CRect.o ./objects
-ar -rc libfig.a ./objects/CRect.o ./objects/CLine.o ./objects/CPoint.o
+mv ./CRect.o ./tmp
+ar -rc libfig.a ./tmp/CRect.o ./tmp/CLine.o ./tmp/CPoint.o
 ranlib libfig.a
-mv libfig.a lib/
+mv libfig.a ../lib/
 #rm CPoint.o
 #rm CLine.o
 #rm CRect.o

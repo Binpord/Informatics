@@ -16,22 +16,22 @@ protected:
 public:
 	CList();
 	~CList();
+	bool IsOk() const;
 	void add(const InfoType&);
-	Elem* getFirst();
-	Elem* getLast();
-	void print();
+	Elem* begin() const;
+	Elem* end() const;
+	void print() const;
 
 	class Iterator
 	{
 	protected:
 		Elem *cur_elem;
-		int index;
 	public:
 		Iterator();
-		Iterator* operator=(Elem*);
+		Iterator* operator=(Elem*) const;
 		Iterator* operator++(int);
-		InfoType* operator->();
-		InfoType operator*();
-		bool operator!=(Elem*);
+		InfoType* operator->() const;
+		InfoType operator*() const;
+		bool operator!=(Elem*) const;
 	};
 };

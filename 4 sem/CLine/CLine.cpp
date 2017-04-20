@@ -9,7 +9,7 @@ CLine::CLine()
 
 void CLine::SetLine(const CPoint& s, const CPoint& e)
 {
-	length = s.diffX(e);
+	length = s.diffX(e);		// length = e - s
 	if(length != 0)
 	{
 		if(s.diffY(e) != 0)		// assuming this to be incorrect input
@@ -124,7 +124,7 @@ int CLine::dot_interception(const CLine& hor, const CLine& vert, CLine* storage 
 	else 
 	{
 		xrange *= -1;
-		if(xrange > length)		// no interception, as vert.start is too far right 
+		if(xrange > hor.length)		// no interception, as vert.start is too far right 
 			return 0;
 		else				// dot-interception if yrange is normal
 		{

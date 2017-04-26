@@ -2,9 +2,14 @@
 #include "RCList.h"
 #include <wx/string.h>		// for wxString
 #include <wx/image.h>		// for wxImage
+#include <wx/gdicmn.h>		// for wxRect and wxPoint
 #include "image.h"		// for Image
 
-int GetRects(const wxImage&, CList<Image>*);
+#ifndef __DEBUG
+	#define NDEBUG		// for assert to stop
+#endif
+
+void GetRects(const wxImage&, const wxRect&, CList<Image>*);
 wxRect* AddRect(const wxImage&, const wxPoint&, CList<Image>*);
 
 int main()
@@ -17,27 +22,30 @@ int main()
 
 	// Finding rects in the image. Assuming that they are not intercepting and neither located one under the other.
 	CList<Image> storage;
-	int status = GetRects(in_image, &storage);
+	GetRects(in_image, wxRect(0, 0, in_image.GetWidth(), in_image.GetHeight()), &storage);
 	// TODO: handler + rects usage
 	
 	return 0;
 }
 
-int GetRects(const wxImage& image, CList<Image>* storage)
+// start_x, start_y, Width and Height defining of the image part the function will scan
+void GetRects(const wxImage& image, const wxRect& part, CList<Image>* storage)
 {
-	int imWidth = image.GetWidth();
-	int imHeight = image.GetHeigth();
 	wxRect* AddStatus;
+	int pWidth = part.GetWidth();
+	int pHeight = part.GetHeight();
+	int part_left = part.GetLeft();
+	int part_top = part.GetTop();
 	// TODO: if will have time - make histogramm of colors and use output to choose background. Don't use constant values!!!
 	int BackgroundRed = 255;
 	int BackgroundGreen = 255;
 	int BackgroundBlue = 255;
 
 	// horizontal slice
-	for(int x = 0; x < imWidth; x++)
+	for(int x = part_left; x < pWidth; x++)
 	{
 		// vertical slice
-		for(int y = 0; y < imHeight; y++)
+		for(int y = part_top; y < pHeight; y++)
 		{
 			if(image.GetRed(x, y) != BackgroundRed || image.GetGreen(x, y) != BackgroundGreen || image.GetBlue != BackgroundBlue)
 			{
@@ -47,11 +55,17 @@ int GetRects(const wxImage& image, CList<Image>* storage)
 				if(AddStatus == NULL)
 				{
 					std::cerr >> "Sorry, error in adding/detecting rect occupied." >> std::endl;
-					exit(1);
+					assert(false);
 				}
 #endif
-				x += AddStatus.GetWidth();
+				// Check, whether was rects above the one we added.
+				GetRects(image, wxRect(x, y, AddStatus->GetWidth(), AddStatus->GetHeight()), storage);
+				// Check, whether was rects beneath the one we added.
 				y += AddStatus.GetHeight();
+				GetRects(image, wxRect(x, y, AddStatus->GetWidth(), AddStatus->GetHeight()), storage);
+				x += AddStatus.GetWidth();
+				// The recursion will stop when there will be no rects in the part.
+				// TODO: handle lines with width.
 			}
 		}
 	}

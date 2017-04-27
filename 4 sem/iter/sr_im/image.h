@@ -21,8 +21,4 @@ public:
 	void ColorPoint(wxPoint, wxColor);
 	void FillRec(wxPoint, wxColor);
 	void saveToFile(string);
-// vadim
-	Image();
-	bool operator==(const Image&);
-	const Image& operator=(const Image&);
 };

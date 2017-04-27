@@ -100,25 +100,3 @@ Image::~Image()
 {
 	wxImage::Destroy();
 }
-
-// vadim
-Image::Image():wxImage()
-{
-	w = 0;
-	h = 0;
-	// wxColor has wxColor()
-}
-
-bool Image::operator==(const Image& comp)
-{
-	return (this->w == comp.w && this->h == comp.h && this->pen == comp.pen && this->fill == comp.fill);
-}
-
-const Image& Image::operator=(const Image& comp)
-{
-	wxImage(*this) = wxImage(comp);
-	this->w = comp.w;
-	this->h = comp.h;
-	this->pen = comp.pen;
-	this->fill = comp.fill;
-}

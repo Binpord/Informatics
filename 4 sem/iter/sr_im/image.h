@@ -24,4 +24,5 @@ public:
 // vadim
 	Image();
 	bool operator==(const Image&);
+	const Image& operator=(const Image&);
 };

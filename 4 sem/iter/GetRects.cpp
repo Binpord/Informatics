@@ -63,7 +63,9 @@ void GetRects(const wxImage& image, const wxRect& part, CList<Image>* storage, c
 				// Check, whether was rects beneath the one we added.
 				GetRects(image, wxRect(wxPoint(x, y), wxPoint(x + AddStatus->GetWidth(), part.GetBottom())), storage, Background);
 				x += AddStatus.GetWidth();
+				delete AddStatus;
 				// The recursion will stop when there will be no rects in the part.
+				break;			// Going forward in horizontal slice.
 			}
 		}
 	}
@@ -71,10 +73,27 @@ void GetRects(const wxImage& image, const wxRect& part, CList<Image>* storage, c
 
 wxRect* AddRect(const wxImage& image, const wxPoint& bottomLeft, CList<Image>* storage, const wxColour& Background) 
 {
-	// TODO: handle lines with width.
+	// TODO: handle lines with width. Is it necessary (?) . No if you don't handle intercepting rects.
 	// Supposing that all lines have same width.
-	wxRect *Res = NULL;
 	int Height = 0, Width = 0;
 
-	for(; image.GetRed(x, y)
+	for(int x = bottomLeft.x; image.GetRed(x, bottomLeft.y) != Background.Red() 
+					&& image.GetGreen(x, bottomLeft.y) != Background.Green() 
+					&& image.GetBlue(x, bottomLeft.y) != Background.Blue(); x++)
+	{
+		Width++;
+	}
+
+	for(int y = bottomLeft.y; image.GetRed(bottomLeft.x, y) != Background.Red()
+					&& image.GetGreen(bottomLeft.x, y) != Background.Green()
+					&& image.GetBlue(bottomLeft.x, y) != Background.Blue(); y++)
+	{
+		Height++;
+	}
+
+	// TODO: add different colours.
+	storage.add(Image(Width, Height, wxColour(0, 0, 0)));
+
+	wxRect *Res = new wxRect(bottomLeft.x, bottomLeft.y, Width, Height);
+	return Res;
 }

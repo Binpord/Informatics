@@ -25,7 +25,7 @@ int main()
 	CList<Image> storage;
 	// TODO: if will have time - make histogramm of colors and use output to choose background. Don't use constant values!!!
 	wxColour Background(255, 255, 255);
-	GetRects(in_image, wxRect(0, 0, in_image.GetWidth(), in_image.GetHeight()), &storage, Background);
+	GetRects(in_image, wxRect(wxPoint(0, in_image.GetHeight()), wxPoint(in_image.GetWidth(), 0)), &storage, Background);
 	// TODO: handler + rects usage
 	
 	return 0;
@@ -35,16 +35,17 @@ int main()
 void GetRects(const wxImage& image, const wxRect& part, CList<Image>* storage, const wxColour& Background)
 {
 	wxRect* AddStatus;
-	int pWidth = part.GetWidth();
-	int pHeight = part.GetHeight();
+	// GetTop and GetBottom swapped in fawor of using wxRect(x, y, width, height) where x and y - bottomLeft
+	int part_top = part.GetBottom();
+	int part_right = part.GetRight();
 	int part_left = part.GetLeft();
-	int part_top = part.GetTop();
+	int part_bottom = part.GetTop();
 
 	// horizontal slice
-	for(int x = part_left; x < pWidth; x++)
+	for(int x = part_left; x < part_right; x++)
 	{
 		// vertical slice
-		for(int y = part_top; y < pHeight; y++)
+		for(int y = part_bottom; y < part_top; y++)
 		{
 			if(image.GetRed(x, y) != Background.Red() || image.GetGreen(x, y) != Background.Green() || image.GetBlue(x, y) != Background.Blue())
 			{
@@ -59,9 +60,10 @@ void GetRects(const wxImage& image, const wxRect& part, CList<Image>* storage, c
 #endif
 				// Check, whether was rects above the one we added.
 				// Using wxRect(const wxPoint& topLeft, const wxPoint& bottomRight)
-				GetRects(image, wxRect(wxPoint(x, part.GetTop()), wxPoint(x + AddStatus->GetWidth(), y + AddStatus->GetHeight())), storage, Background);
+				// Note that part. GetTop/Bottom swapped
+				GetRects(image, wxRect(wxPoint(x, part_top), wxPoint(x + AddStatus->GetWidth(), y + AddStatus->GetHeight())), storage, Background);
 				// Check, whether was rects beneath the one we added.
-				GetRects(image, wxRect(wxPoint(x, y), wxPoint(x + AddStatus->GetWidth(), part.GetBottom())), storage, Background);
+				GetRects(image, wxRect(wxPoint(x, y), wxPoint(x + AddStatus->GetWidth(), part_bottom)), storage, Background);
 				x += AddStatus->GetWidth();
 				delete AddStatus;
 				// The recursion will stop when there will be no rects in the part.

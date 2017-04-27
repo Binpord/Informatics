@@ -114,8 +114,9 @@ bool Image::operator==(const Image& comp)
 	return (this->w == comp.w && this->h == comp.h && this->pen == comp.pen && this->fill == comp.fill);
 }
 
-const Image& Image::operator=(const Image& comp):operator=(comp)
+const Image& Image::operator=(const Image& comp)
 {
+	wxImage(*this) = wxImage(comp);
 	this->w = comp.w;
 	this->h = comp.h;
 	this->pen = comp.pen;

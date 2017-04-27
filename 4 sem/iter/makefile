@@ -24,21 +24,21 @@ test:
 
 image:
 	cp ./sr_im/image.h ../include/
-	clang -c ./sr_im/image.cpp -I../include -I./sr_im `wx-config --cflags` -std=c++11 -w
+	g++ -c ./sr_im/image.cpp -I../include -I./sr_im `wx-config --cflags` -std=c++11
 	ar $(LIB_FLAGS) ../lib/libclass.a image.o
 	ranlib ../lib/libclass.a
 	rm image.o
 
 RCList_Debug:
 	cp ./RCList.h ../include/
-	clang -g2 RCList.cpp -c -I../include -I./sr_im `wx-config --cflags` -D__DEBUG -std=c++11 -w
+	g++ -g2 RCList.cpp -c -I../include -I./sr_im `wx-config --cflags` -D__DEBUG -std=c++11
 	ar $(LIB_FLAGS) ../lib/libclass.a RCList.o
 	ranlib ../lib/libclass.a
 	rm RCList.o
 
 RCList_Release:
 	cp ./RCList.h ../include/
-	clang RCList.cpp -c -I../include -I./sr_im `wx-config --cflags`
+	g++ RCList.cpp -c -I../include -I./sr_im `wx-config --cflags`
 	ar $(LIB_FLAGS) ../lib/libclass.a RCList.o
 	ranlib ../lib/libclass.a
 	rm RCList.o
@@ -46,4 +46,4 @@ RCList_Release:
 GetRects_Debug:
 	make RCList_Debug
 	make image
-	clang -g2 GetRects.cpp -I../include -L../lib -lclass `wx-config --cflags` `wx-config --clibs` -D__DEBUG -std=c++11 -w
+	g++ -o GetRects -g2 GetRects.cpp -I../include -L../lib -lclass `wx-config --cflags` `wx-config --libs` -lstdc++ -D__DEBUG -std=c++11

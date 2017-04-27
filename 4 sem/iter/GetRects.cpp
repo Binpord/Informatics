@@ -4,7 +4,6 @@
 #include <wx/image.h>		// for wxImage
 #include <wx/gdicmn.h>		// for wxRect and wxPoint
 #include <wx/colour.h>		// for wxColour
-#include "image.h"		// for Image
 
 #ifndef __DEBUG
 	#define NDEBUG		// for assert to stop
@@ -15,17 +14,18 @@ wxRect* AddRect(const wxImage&, const wxPoint&, CList<Image>*, const wxColour&);
 
 int main()
 {
+	wxInitAllImageHandlers();
 	// Getting input filename and opening image. Note that I open only jpeg files.
-	std::cout >> "Please, enter path to your image. Note that this programm assumes that it is a jpeg image." << std::endl;
-	std::wstring filename;
+	std::cout << "Please, enter path to your image. Note that this programm assumes that it is a png image." << std::endl;
+	std::string filename;
 	std::cin >> filename;
-	wxImage in_image(filename, wxBITMAP_TYPE_JPEG);
+	wxImage in_image(filename, wxBITMAP_TYPE_PNG);
 
 	// Finding rects in the image. Assuming that they are not intercepting and neither located one under the other.
 	CList<Image> storage;
 	// TODO: if will have time - make histogramm of colors and use output to choose background. Don't use constant values!!!
 	wxColour Background(255, 255, 255);
-	GetRects(in_image, wxRect(0, 0, in_image.GetWidth(), in_image.GetHeight()), &storagem, Background);
+	GetRects(in_image, wxRect(0, 0, in_image.GetWidth(), in_image.GetHeight()), &storage, Background);
 	// TODO: handler + rects usage
 	
 	return 0;
@@ -46,14 +46,14 @@ void GetRects(const wxImage& image, const wxRect& part, CList<Image>* storage, c
 		// vertical slice
 		for(int y = part_top; y < pHeight; y++)
 		{
-			if(image.GetRed(x, y) != Background.Red() || image.GetGreen(x, y) != Background.Green() || image.GetBlue != Background.Blue())
+			if(image.GetRed(x, y) != Background.Red() || image.GetGreen(x, y) != Background.Green() || image.GetBlue(x, y) != Background.Blue())
 			{
 				wxPoint(x, y);
 				AddStatus = AddRect(image, wxPoint(x, y), storage, Background);
 #ifdef __DEBUG
 				if(AddStatus == NULL)
 				{
-					std::cerr >> "Sorry, error in adding/detecting rect occupied." >> std::endl;
+					std::cerr << "Sorry, error in adding/detecting rect occupied." << std::endl;
 					assert(false);
 				}
 #endif
@@ -62,7 +62,7 @@ void GetRects(const wxImage& image, const wxRect& part, CList<Image>* storage, c
 				GetRects(image, wxRect(wxPoint(x, part.GetTop()), wxPoint(x + AddStatus->GetWidth(), y + AddStatus->GetHeight())), storage, Background);
 				// Check, whether was rects beneath the one we added.
 				GetRects(image, wxRect(wxPoint(x, y), wxPoint(x + AddStatus->GetWidth(), part.GetBottom())), storage, Background);
-				x += AddStatus.GetWidth();
+				x += AddStatus->GetWidth();
 				delete AddStatus;
 				// The recursion will stop when there will be no rects in the part.
 				break;			// Going forward in horizontal slice.
@@ -92,7 +92,7 @@ wxRect* AddRect(const wxImage& image, const wxPoint& bottomLeft, CList<Image>* s
 	}
 
 	// TODO: add different colours.
-	storage.add(Image(Width, Height, wxColour(0, 0, 0)));
+	storage->add(Image(Width, Height, wxColour(0, 0, 0)));
 
 	wxRect *Res = new wxRect(bottomLeft.x, bottomLeft.y, Width, Height);
 	return Res;

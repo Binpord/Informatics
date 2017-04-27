@@ -8,7 +8,6 @@ CList<InfoType>::Elem::Elem()
 {
 	this->prev = NULL;
 	this->next = NULL;
-	this->info = 0;
 }
 
 template<typename InfoType>
@@ -165,7 +164,7 @@ template<typename InfoType>
 InfoType CList<InfoType>::operator[](unsigned int index)
 {
 	if(this->length < index - 1)
-		return 0;
+		return InfoType();
 
 	Elem* cur_elem = this->first;
 	Elem* prev_elem = NULL;
@@ -250,7 +249,7 @@ InfoType CList<InfoType>::Iterator::operator*() const
 	if(this->cur_elem != NULL)
 		return this->cur_elem->info;
 	else
-		return NULL;
+		return InfoType();
 }
 
 template<typename InfoType>

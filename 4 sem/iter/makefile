@@ -31,8 +31,8 @@ image:
 
 RCList_Debug:
 	cp ./RCList.h ../include/
-	clang -g2 RCList.cpp -c -I../include -I./sr_im `wx-config --cflags` -D__DEBUG -std=c++11
-	ar $(LIB_FLAGS) ../lib/libclass.a CList.o RCList.o
+	clang -g2 RCList.cpp -c -I../include -I./sr_im `wx-config --cflags` -D__DEBUG -std=c++11 -w
+	ar $(LIB_FLAGS) ../lib/libclass.a RCList.o
 	ranlib ../lib/libclass.a
 	rm RCList.o
 
@@ -42,3 +42,8 @@ RCList_Release:
 	ar $(LIB_FLAGS) ../lib/libclass.a RCList.o
 	ranlib ../lib/libclass.a
 	rm RCList.o
+
+GetRects_Debug:
+	make RCList_Debug
+	make image
+	clang -g2 GetRects.cpp -I../include -L../lib -lclass `wx-config --cflags` `wx-config --clibs` -D__DEBUG -std=c++11 -w

@@ -44,6 +44,13 @@ RCList_Release:
 	rm RCList.o
 
 GetRects_Debug:
+	make ImageRect_Debug
 	make RCList_Debug
-	make image
 	g++ -o GetRects -g2 GetRects.cpp -I../include -L../lib -lclass `wx-config --cflags` `wx-config --libs` -lstdc++ -D__DEBUG -std=c++11
+
+ImageRect_Debug:
+	cp ./ImageRect.h ../include/
+	g++ ImageRect.cpp -c -I../include `wx-config --cflags`
+	ar $(LIB_FLAGS) ../lib/libclass.a ImageRect.o
+	ranlib ../lib/libclass.a
+	rm ImageRect.o

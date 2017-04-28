@@ -340,5 +340,4 @@ typename CList<InfoType>::CList_exeption* CList<InfoType>::IsOk() const
 
 // ============================================================================================
 // creating exact templates
-template class CList<Image>;
 template class CList<ImageRect>;

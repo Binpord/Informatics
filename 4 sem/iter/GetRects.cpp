@@ -32,14 +32,13 @@ int main()
 	CList<ImageRect>::Iterator i;
 	for(i = storage.begin(); i != storage.end(); i++)
 	{
-		wxColour colour = *i.GetFill();
+		wxColour colour = (*i).GetFill();
 		image.SetRGB(*i, colour.Red(), colour.Green(), colour.Blue());
 	}
-	wxColour colour = *i.GetFill();
+	wxColour colour = (*i).GetFill();
 	image.SetRGB(*i, colour.Red(), colour.Green(), colour.Blue());
 
-	wxfilename -= ".png";
-	wxfilename += "_result.png";
+	wxfilename = wxfilename.Mid(0, wxfilename.Find('.')) + "_result.png";
 	image.SaveFile(wxfilename, wxBITMAP_TYPE_PNG);
 	
 	return 0;

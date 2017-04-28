@@ -208,11 +208,13 @@ typename CList<InfoType>::Iterator* CList<InfoType>::Iterator::operator++(int)
 		return NULL;
 	else
 	{
-		InfoType start_info = this->cur_elem->info;
+		// InfoType start_info = this->cur_elem->info;
+		CList<InfoType>::Elem *start = this->cur_elem;
 
 		do
 			this->cur_elem = this->cur_elem->next;
-		while(this->cur_elem->info == start_info);
+	//	while(this->cur_elem->info == start_info);
+		while(this->cur_elem == start);
 	}
 
 	return this;
@@ -256,7 +258,7 @@ InfoType CList<InfoType>::Iterator::operator*() const
 template<typename InfoType>
 bool CList<InfoType>::Iterator::operator!=(CList<InfoType>::Elem* elem) const
 {
-	return !(cur_elem->info == elem->info);
+	return !(cur_elem == elem);
 }
 
 // ============================================================================================

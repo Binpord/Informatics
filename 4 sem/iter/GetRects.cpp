@@ -34,6 +34,7 @@ int main()
 	{
 		wxColour colour = (*i).GetFill();
 		image.SetRGB(*i, colour.Red(), colour.Green(), colour.Blue());
+		image.SaveFile("dbg.png", wxBITMAP_TYPE_PNG);
 	}
 	wxColour colour = (*i).GetFill();
 	image.SetRGB(*i, colour.Red(), colour.Green(), colour.Blue());
@@ -83,7 +84,10 @@ void AddRect(wxImage& image, const wxPoint& bottomLeft, CList<ImageRect>* storag
 	}
 
 	// TODO: add different colours.
-	ImageRect result(wxPoint(bottomLeft.x, bottomLeft.y + Height), wxPoint(bottomLeft.x + Width, bottomLeft.y), wxColour(50, 50, 50));
+	// Note that big strange troubles in wxRect(const wxPoint& topLeft, const wxPoint& bottomRight) is forsing me to 
+	// use it like wxRect(wxPoint(x, y - 1), wxPoint(x - 1, y)). Otherwise it sets width and height up by one.
+	ImageRect result(wxPoint(bottomLeft.x, bottomLeft.y + Height - 1), wxPoint(bottomLeft.x + Width - 1, bottomLeft.y), wxColour(50, 50, 50));
 	storage->add(result);
 	image.SetRGB(result, Background.Red(), Background.Green(), Background.Blue());
+	image.SaveFile("dbg.png", wxBITMAP_TYPE_PNG);
 }

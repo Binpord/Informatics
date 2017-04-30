@@ -10,6 +10,10 @@
 	#define NDEBUG		// for assert to stop
 #endif
 
+unsigned long last_colour = 0;
+unsigned long cur_add = 128;
+const unsigned long bound = 1 << 8 * 3;
+
 void GetRects(wxImage&, CList<ImageRect>*, const wxColour&);
 void AddRect(wxImage&, const wxPoint&, CList<ImageRect>*, const wxColour&);
 
@@ -86,7 +90,12 @@ void AddRect(wxImage& image, const wxPoint& bottomLeft, CList<ImageRect>* storag
 	// TODO: add different colours.
 	// Note that big strange troubles in wxRect(const wxPoint& topLeft, const wxPoint& bottomRight) is forsing me to 
 	// use it like wxRect(wxPoint(x, y - 1), wxPoint(x - 1, y)). Otherwise it sets width and height up by one.
-	ImageRect result(wxPoint(bottomLeft.x, bottomLeft.y + Height - 1), wxPoint(bottomLeft.x + Width - 1, bottomLeft.y), wxColour(50, 50, 50));
+	last_colour += cur_add;
+	cur_add <<= 8;
+	if(cur_add > bound)
+		cur_add = 128;
+
+	ImageRect result(wxPoint(bottomLeft.x, bottomLeft.y + Height - 1), wxPoint(bottomLeft.x + Width - 1, bottomLeft.y), wxColour(last_colour));
 	storage->add(result);
 	image.SetRGB(result, Background.Red(), Background.Green(), Background.Blue());
 	image.SaveFile("dbg.png", wxBITMAP_TYPE_PNG);

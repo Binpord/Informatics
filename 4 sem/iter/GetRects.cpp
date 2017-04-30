@@ -29,10 +29,8 @@ int main()
 
 	// Finding rects in the image. Assuming that they are not intercepting and neither located one under the other.
 	CList<ImageRect> storage;
-	// TODO: if will have time - make histogramm of colors and use output to choose background. Don't use constant values!!!
 	wxColour Background(255, 255, 255);
 	GetRects(image, &storage, Background);
-	// TODO: rects usage (colour them + save in the other file)
 	CList<ImageRect>::Iterator i;
 	for(i = storage.begin(); i != storage.end(); i++)
 	{
@@ -87,7 +85,6 @@ void AddRect(wxImage& image, const wxPoint& bottomLeft, CList<ImageRect>* storag
 		Height++;
 	}
 
-	// TODO: add different colours.
 	// Note that big strange troubles in wxRect(const wxPoint& topLeft, const wxPoint& bottomRight) is forsing me to 
 	// use it like wxRect(wxPoint(x, y - 1), wxPoint(x - 1, y)). Otherwise it sets width and height up by one.
 	last_colour += cur_add;

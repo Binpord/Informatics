@@ -17,7 +17,7 @@ bool ImageRect::operator==(const ImageRect& comp) const
 
 const ImageRect& ImageRect::operator=(const ImageRect& comp)
 {
-	(wxRect)*this = (wxRect)comp;
+	*((wxRect*)this) = (wxRect)comp;
 	this->fill = comp.fill;
 	return *this;
 }

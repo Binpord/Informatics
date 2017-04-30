@@ -50,7 +50,7 @@ GetRects_Debug:
 
 ImageRect_Debug:
 	cp ./ImageRect.h ../include/
-	g++ ImageRect.cpp -c -I../include `wx-config --cflags`
+	g++ -g2 ImageRect.cpp -c -I../include `wx-config --cflags`
 	ar $(LIB_FLAGS) ../lib/libclass.a ImageRect.o
 	ranlib ../lib/libclass.a
 	rm ImageRect.o

@@ -12,7 +12,7 @@ ImageRect::ImageRect(const wxPoint& topLeft, const wxPoint& bottomRight, const w
 
 bool ImageRect::operator==(const ImageRect& comp) const
 {
-	return ((wxRect)*this == (wxRect)comp) && (this->fill == comp.fill);
+	return (((wxRect)(*this)) == ((wxRect)comp)) && (this->fill == comp.fill);
 }
 
 const ImageRect& ImageRect::operator=(const ImageRect& comp)

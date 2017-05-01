@@ -36,7 +36,6 @@ int main()
 	{
 		wxColour colour = (*i).GetFill();
 		image.SetRGB(*i, colour.Red(), colour.Green(), colour.Blue());
-		image.SaveFile("dbg.png", wxBITMAP_TYPE_PNG);
 	}
 	wxColour colour = (*i).GetFill();
 	image.SetRGB(*i, colour.Red(), colour.Green(), colour.Blue());
@@ -95,5 +94,4 @@ void AddRect(wxImage& image, const wxPoint& bottomLeft, CList<ImageRect>* storag
 	ImageRect result(wxPoint(bottomLeft.x, bottomLeft.y + Height - 1), wxPoint(bottomLeft.x + Width - 1, bottomLeft.y), wxColour(last_colour));
 	storage->add(result);
 	image.SetRGB(result, Background.Red(), Background.Green(), Background.Blue());
-	image.SaveFile("dbg.png", wxBITMAP_TYPE_PNG);
 }

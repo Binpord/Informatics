@@ -1,13 +1,19 @@
-#include "wx/wx.h"
-#include "wx/sizer.h"
+#include <wx/wx.h>
+#include <wx/sizer.h>
+#include <wx/bitmap.h>
  
+// Was forced to use global varible, as I need to initialize it before first DrawPane emergence.
+// Need this because DrawPane(wxFrame*) will be allocating memory and, hence, need to delete it,
+// 	if it was there.
+wxBitmap* input = NULL;
+
 /*
  * =====================================
  * GUI classes
  * =====================================
  */
 
-class DrawPane : public wxPanel
+class DrawPane: public wxPanel
 {
 public:
 	DrawPane(wxFrame* parent);
@@ -75,6 +81,13 @@ bool MyApp::OnInit()
 // Can also be triggeres by calling Refresh()/Update().
 DrawPane::DrawPane(wxFrame* parent):wxPanel(parent)
 {
+	if(input)
+		delete input;
+
+	input = new wxBitmap(parent->GetClientSize());
+	wxMemoryDC dc(*input);
+	dc.SetBackground(*wxBLACK_BRUSH);
+	dc.Clear();	// sets input bitmap with black color
 }
  
 void DrawPane::paintEvent(wxPaintEvent& evt)
@@ -87,19 +100,27 @@ void DrawPane::mouseMoved(wxMouseEvent& event)
 {
 	if(event.Dragging() == true)
 	{
+		// semimultaniously drawing in wxBitmap and on screen
 		wxClientDC dc(this);
+		wxMemoryDC memdc(*input);
 		dc.SetPen(wxPen(wxColor(0, 0, 0), 10));
+		memdc.SetPen(wxPen(wxColor(255, 255, 255), 10));
 		wxPoint pos = event.GetLogicalPosition(dc);
 		dc.DrawPoint(pos);
+		memdc.DrawPoint(pos);
 	}
 }
 
 void DrawPane::mouseDown(wxMouseEvent& event)
 {
+	// semimultaniously drawing in wxBitmap and on screen
 	wxClientDC dc(this);
+	wxMemoryDC memdc(*input);
 	dc.SetPen(wxPen(wxColor(0, 0, 0), 10));
+	memdc.SetPen(wxPen(wxColor(255, 255, 255), 10));
 	wxPoint pos = event.GetLogicalPosition(dc);
 	dc.DrawPoint(pos);
+	memdc.DrawPoint(pos);
 }
 
 // Refresh on right-button click

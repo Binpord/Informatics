@@ -8,6 +8,7 @@
  * virtual void Draw() = 0;
  * virtual void MoveTo(const wxPoint&) = 0;
  * virtual void Fill(const wxColour&) = 0;
+ * ==================================================
  */
 
 CFig::CFig(Image* m)
@@ -25,6 +26,7 @@ CFig::CFig(Image* m)
  * void Draw();
  * void MoveTo(const wxPoint&);
  * void Fill(const wxColour&);
+ * ==================================================
  */
 
 CLine::CLine(Image* m):CFig(m)

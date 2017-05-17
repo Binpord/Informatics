@@ -1,11 +1,6 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 #include <wx/bitmap.h>
- 
-// Was forced to use global varible, as I need to initialize it before first DrawPane emergence.
-// Need this because DrawPane(wxFrame*) will be allocating memory and, hence, need to delete it,
-// 	if it was there.
-wxBitmap* input = NULL;
 
 /*
  * =====================================
@@ -15,6 +10,9 @@ wxBitmap* input = NULL;
 
 class DrawPane: public wxPanel
 {
+protected:
+	wxBitmap* input;
+	wxPoint last_pos;
 public:
 	DrawPane(wxFrame* parent);
  
@@ -23,6 +21,7 @@ public:
 	void mouseMoved(wxMouseEvent& event);
 	void mouseDown(wxMouseEvent& event);
 	void rightClick(wxMouseEvent& event);
+	void resizeEvent(wxSizeEvent& event);
  
 	DECLARE_EVENT_TABLE()
 };
@@ -33,6 +32,7 @@ BEGIN_EVENT_TABLE(DrawPane, wxPanel)
 	EVT_LEFT_DOWN(DrawPane::mouseDown)
 	EVT_RIGHT_DOWN(DrawPane::rightClick)
 	EVT_PAINT(DrawPane::paintEvent)
+	EVT_SIZE(DrawPane::resizeEvent)
  
 END_EVENT_TABLE()
  
@@ -81,18 +81,19 @@ bool MyApp::OnInit()
 // Can also be triggeres by calling Refresh()/Update().
 DrawPane::DrawPane(wxFrame* parent):wxPanel(parent)
 {
-	if(input)
-		delete input;
-
 	input = new wxBitmap(parent->GetClientSize());
-	wxMemoryDC dc(*input);
-	dc.SetBackground(*wxBLACK_BRUSH);
-	dc.Clear();	// sets input bitmap with black color
+	wxMemoryDC memdc(*input);
+	memdc.SetBackground(*wxWHITE_BRUSH);
+	memdc.Clear();	// sets input bitmap with black color
 }
  
 void DrawPane::paintEvent(wxPaintEvent& evt)
 {
+	wxMemoryDC memdc(*input);
 	wxPaintDC dc(this);
+	int width, height;
+	this->GetClientSize(&width, &height);
+	dc.Blit(0, 0, width, height, &memdc, 0, 0);
 }
 
 // Draw on left-button click and drag
@@ -103,11 +104,12 @@ void DrawPane::mouseMoved(wxMouseEvent& event)
 		// semimultaniously drawing in wxBitmap and on screen
 		wxClientDC dc(this);
 		wxMemoryDC memdc(*input);
-		dc.SetPen(wxPen(wxColor(0, 0, 0), 10));
-		memdc.SetPen(wxPen(wxColor(255, 255, 255), 10));
+		memdc.SetPen(wxPen(wxColor(0, 0, 0), 10));
 		wxPoint pos = event.GetLogicalPosition(dc);
-		dc.DrawPoint(pos);
-		memdc.DrawPoint(pos);
+		memdc.DrawLine(last_pos, pos);
+		Refresh();
+
+		last_pos = pos;
 	}
 }
 
@@ -116,15 +118,38 @@ void DrawPane::mouseDown(wxMouseEvent& event)
 	// semimultaniously drawing in wxBitmap and on screen
 	wxClientDC dc(this);
 	wxMemoryDC memdc(*input);
-	dc.SetPen(wxPen(wxColor(0, 0, 0), 10));
-	memdc.SetPen(wxPen(wxColor(255, 255, 255), 10));
+	memdc.SetPen(wxPen(wxColor(0, 0, 0), 10));
 	wxPoint pos = event.GetLogicalPosition(dc);
-	dc.DrawPoint(pos);
 	memdc.DrawPoint(pos);
+	Refresh();
+	
+	last_pos = pos;
 }
 
 // Refresh on right-button click
 void DrawPane::rightClick(wxMouseEvent& event)
 {
+	delete input;
+	input = new wxBitmap(this->GetClientSize());
+	wxMemoryDC memdc(*input);
+	memdc.SetBackground(*wxWHITE_BRUSH);
+	memdc.Clear();	// sets input bitmap with black color
+
+	Refresh();
+}
+
+void DrawPane::resizeEvent(wxSizeEvent& event)
+{
+	wxBitmap* tmp_input = new wxBitmap(event.GetSize());
+	wxMemoryDC src_dc(*input);
+	wxMemoryDC dst_dc(*tmp_input);
+
+	dst_dc.SetBackground(*wxWHITE_BRUSH);
+	dst_dc.Clear();
+
+	dst_dc.Blit(0, 0, input->GetWidth(), input->GetHeight(), &src_dc, 0, 0);
+	delete input;
+	input = tmp_input;
+
 	Refresh();
 }

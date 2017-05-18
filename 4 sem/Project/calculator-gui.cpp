@@ -1,6 +1,7 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 #include <wx/bitmap.h>
+#include "handwritten-recognition.h"
 
 /*
  * =====================================
@@ -13,8 +14,11 @@ class DrawPane: public wxPanel
 protected:
 	wxBitmap* input;
 	wxPoint last_pos;
+	bool is_listing_result;
 public:
 	DrawPane(wxFrame* parent);
+
+	void ResultOut(const wxString&);
  
 	// events
 	void paintEvent(wxPaintEvent& evt);
@@ -22,6 +26,7 @@ public:
 	void mouseDown(wxMouseEvent& event);
 	void rightClick(wxMouseEvent& event);
 	void resizeEvent(wxSizeEvent& event);
+	void onSpaceDown(wxKeyEvent& event);
  
 	DECLARE_EVENT_TABLE()
 };
@@ -33,6 +38,7 @@ BEGIN_EVENT_TABLE(DrawPane, wxPanel)
 	EVT_RIGHT_DOWN(DrawPane::rightClick)
 	EVT_PAINT(DrawPane::paintEvent)
 	EVT_SIZE(DrawPane::resizeEvent)
+	EVT_KEY_DOWN(DrawPane::onSpaceDown)
  
 END_EVENT_TABLE()
  
@@ -85,6 +91,7 @@ DrawPane::DrawPane(wxFrame* parent):wxPanel(parent)
 	wxMemoryDC memdc(*input);
 	memdc.SetBackground(*wxWHITE_BRUSH);
 	memdc.Clear();	// sets input bitmap with black color
+	is_listing_result = false;
 }
  
 void DrawPane::paintEvent(wxPaintEvent& evt)
@@ -101,7 +108,6 @@ void DrawPane::mouseMoved(wxMouseEvent& event)
 {
 	if(event.Dragging() == true)
 	{
-		// semimultaniously drawing in wxBitmap and on screen
 		wxClientDC dc(this);
 		wxMemoryDC memdc(*input);
 		memdc.SetPen(wxPen(wxColor(0, 0, 0), 10));
@@ -115,7 +121,16 @@ void DrawPane::mouseMoved(wxMouseEvent& event)
 
 void DrawPane::mouseDown(wxMouseEvent& event)
 {
-	// semimultaniously drawing in wxBitmap and on screen
+	if(is_listing_result == true)
+	{
+		delete input;
+		input = new wxBitmap(this->GetClientSize());
+		wxMemoryDC memdc(*input);
+		memdc.SetBackground(*wxWHITE_BRUSH);
+		memdc.Clear();	// sets input bitmap with white color
+		is_listing_result = false;
+	}
+
 	wxClientDC dc(this);
 	wxMemoryDC memdc(*input);
 	memdc.SetPen(wxPen(wxColor(0, 0, 0), 10));
@@ -133,7 +148,7 @@ void DrawPane::rightClick(wxMouseEvent& event)
 	input = new wxBitmap(this->GetClientSize());
 	wxMemoryDC memdc(*input);
 	memdc.SetBackground(*wxWHITE_BRUSH);
-	memdc.Clear();	// sets input bitmap with black color
+	memdc.Clear();	// sets input bitmap with white color
 
 	Refresh();
 }
@@ -152,4 +167,37 @@ void DrawPane::resizeEvent(wxSizeEvent& event)
 	input = tmp_input;
 
 	Refresh();
+}
+
+void DrawPane::onSpaceDown(wxKeyEvent& event)
+{
+	// evaluate on space
+	if(event.GetKeyCode() == ' ')
+	{
+		wxString expr = GetExpression(input);
+		int result = Evaluate(expr);
+		expr += " = ";
+		expr << result;
+		ResultOut(expr);
+
+		Refresh();
+		is_listing_result = true;
+	}
+}
+
+// temporary function
+void DrawPane::ResultOut(const wxString& result)
+{
+	delete input;
+	input = new wxBitmap(this->GetClientSize());
+	wxMemoryDC memdc(*input);
+	memdc.SetBackground(*wxWHITE_BRUSH);
+	memdc.Clear();	// sets input bitmap with white color
+
+	memdc.DrawText(result, 0, 0);
+}
+
+int Evaluate(const wxString& expr)
+{
+	return 2;
 }

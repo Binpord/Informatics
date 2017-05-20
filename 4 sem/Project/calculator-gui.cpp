@@ -2,6 +2,7 @@
 #include <wx/sizer.h>
 #include <wx/bitmap.h>
 #include "handwritten-recognition.h"
+#include "exprtk.hpp"		// for mathematical expressions evaluation
 
 /*
  * =====================================
@@ -175,7 +176,7 @@ void DrawPane::onSpaceDown(wxKeyEvent& event)
 	if(event.GetKeyCode() == ' ')
 	{
 		wxString expr = GetExpression(input);
-		int result = Evaluate(expr);
+		double result = Evaluate(expr);
 		expr += " = ";
 		expr << result;
 		ResultOut(expr);
@@ -197,7 +198,20 @@ void DrawPane::ResultOut(const wxString& result)
 	memdc.DrawText(result, 0, 0);
 }
 
-int Evaluate(const wxString& expr)
+double Evaluate(const wxString& expr)
 {
-	return 2;
+	exprtk::expression<double> expression;
+	exprtk::parser<double> parser;
+	std::string expression_str = expr.ToStdString();
+
+	if(parser.compile(expression_str, expression) == 0)
+	{
+		wxString error_message;
+		error_message << "Error in expression \<" << expression_str << "\>" << std::endl;
+		error_message << parser.error().c_str();
+		wxMessageBox(error_message);
+		throw;
+	}
+
+	return expression.value();
 }

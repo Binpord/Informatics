@@ -29,7 +29,7 @@ std::vector<cv::Mat>* DivideSumbols(const wxImage& image)
 		int left = count;
 		for(count; CountWhiteCols(image, count) == 0 && count < width; count++);
 
-		int right = count;
+		int right = count - 1;
 
 		wxRect sumbol_rect = CountTopAndBot(image, left, right);
 		wxImage sumbol = image.GetSubImage(sumbol_rect);
@@ -37,11 +37,16 @@ std::vector<cv::Mat>* DivideSumbols(const wxImage& image)
 		wxInitAllImageHandlers();
 		sumbol.SaveFile("test1.png", wxBITMAP_TYPE_PNG);
 #endif
-		sumbol.Rescale(28, 28);
+		SwitchColors(&sumbol);
+		// need image 1x1 with indentation (10 points should be enough)
+		int new_size = std::max(sumbol.GetWidth(), sumbol.GetHeight()) + 10;
+		int new_x = (new_size - sumbol.GetWidth()) / 2;
+		int new_y = (new_size - sumbol.GetHeight()) / 2;
+		sumbol.Resize(wxSize(new_size, new_size), wxPoint(new_x, new_y), 0, 0, 0);
 #ifdef __DEBUG
 		sumbol.SaveFile("test2.png", wxBITMAP_TYPE_PNG);
 #endif
-		SwitchColors(&sumbol);
+		sumbol.Rescale(28, 28);
 #ifdef __DEBUG
 		sumbol.SaveFile("test3.png", wxBITMAP_TYPE_PNG);
 #endif

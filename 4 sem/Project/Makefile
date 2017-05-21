@@ -1,9 +1,29 @@
-calculator-gui: override LDLIBS+=$(shell wx-config --libs)
-calculator-gui: override CXXFLAGS+=$(shell wx-config --cflags)
-all: calculator-gui
-
-calc:
-	g++ -std=c++11 calculator-gui.cpp handwritten-recognition.cpp WxConvertCv.cpp trainSVM.cpp -I./exprtk `wx-config --cflags --libs` `pkg-config --cflags --libs opencv` -g2 -D__DEBUG -o calc
+CXXFLAGS += $(shell wx-config --cxxflags)
+CXXFLAGS += $(shell pkg-config --cflags opencv)
+LDLIBS += $(shell wx-config --libs)
+LDLIBS += $(shell pkg-config --libs opencv)
 
 precompiled: precompiled_headers.h
-	g++ precompiled_headers.h `wx-config --cflags` -I./exprtk
+	$(CXX) precompiled_headers.h $(CXXFLAGS)
+
+WxConvertCv: WxConvertCv.h WxConvertCv.cpp
+	$(CXX) -c WxConvertCv.cpp $(CXXFLAGS)
+	$(AR) -rc libwxconvertcv.a WxConvertCv.o
+	ranlib libwxconvertcv.a
+	rm WxConvertCv.o
+
+exprtk: exprtk.hpp
+	$(CXX) exprtk.hpp $(CXXFLAGS)
+
+handwritten-recognition: handwritten-recognition.h handwritten-recognition.cpp
+	$(CXX) -c handwritten-recognition.cpp $(CXXFLAGS)
+	$(AR) -rc libhandreco.a handwritten-recognition.o
+	ranlib libhandreco.a
+	rm handwritten-recognition.o
+
+calc: calculator-gui.cpp
+calc: LDLIBS += -L./
+calc: LDLIBS += -lhandreco
+calc: LDLIBS += -lwxconvertcv
+calc:
+	$(CXX) calculator-gui.cpp $(CXXFLAGS) $(LDLIBS) -o calc

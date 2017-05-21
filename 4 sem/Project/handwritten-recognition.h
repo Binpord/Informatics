@@ -1,12 +1,5 @@
-#include <wx/wx.h>
-#include <wx/bitmap.h>
-#include <wx/gdicmn.h>
+#include "precompiled_headers.h"
 #include "WxConvertCv.h"
-#include <opencv2/core.hpp>
-#include <opencv/cv.h>
-#include <opencv2/highgui.hpp>
-#include <opencv2/ml.hpp>
-#include <opencv2/objdetect.hpp>
 
 std::vector<cv::Mat>* DivideSumbols(const wxImage&);
 wxString GetExpression(wxBitmap* input);

@@ -1,8 +1,5 @@
-#include <wx/wx.h>
-#include <wx/sizer.h>
-#include <wx/bitmap.h>
+#include "precompiled_headers.h"
 #include "handwritten-recognition.h"
-#include "exprtk.hpp"		// for mathematical expressions evaluation
 #include "trainSVM.h"
 
 /*

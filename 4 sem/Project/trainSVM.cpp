@@ -14,8 +14,9 @@ void GetTrainingFiles(std::string dir)
 	for(std::string sumbol : sumbols)
 	{
 		std::vector<std::string> sumbol_examples = GetListFiles(dir + '/' + sumbol);
-		for(std::string file : sumbol_examples)
-			file = dir + '/' + file;
+		int size = sumbol_examples.size();
+		for(int i = 0; i < size; i++)
+			sumbol_examples.at(i) = dir + '/' + sumbol + '/' + sumbol_examples.at(i);
 
 		trainingFiles.insert(trainingFiles.end(), sumbol_examples.begin(), sumbol_examples.end());
 		labels.insert(labels.end(), sumbol_examples.size(), sumbol.at(0));	// assuming only one-chared sumbols
@@ -44,4 +45,18 @@ std::vector<std::string> GetListFiles(std::string dir)
 	}
 
 	return result;
+}
+
+
+void Print()
+{
+	GetTrainingFiles("test_dir");
+	for(char i : labels)
+		std::cout << i << ' ';
+
+	std::cout << std::endl;
+	
+	for(std::string i : trainingFiles)
+		std::cout << i << ' ';
+	std::cout << std::endl;
 }

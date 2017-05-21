@@ -5,7 +5,7 @@
 
 std::vector<cv::Mat>* DivideSumbols(const wxImage&);
 wxString GetExpression(wxBitmap* input);
-int Evaluate(const wxString& expr);
+double Evaluate(const wxString& expr);
 wxString PerformRecognition(const cv::Mat&);
 int CountWhiteCols(const wxImage&, int);
 wxRect CountTopAndBot(const wxImage&, int, int);

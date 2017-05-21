@@ -20,6 +20,7 @@ public:
 	DrawPane(wxFrame* parent);
 
 	void ResultOut(const wxString&);
+	void ClearPane();
  
 	// events
 	void paintEvent(wxPaintEvent& evt);
@@ -145,13 +146,18 @@ void DrawPane::mouseDown(wxMouseEvent& event)
 // Refresh on right-button click
 void DrawPane::rightClick(wxMouseEvent& event)
 {
+	ClearPane();
+
+	Refresh();
+}
+
+void DrawPane::ClearPane()
+{
 	delete input;
 	input = new wxBitmap(this->GetClientSize());
 	wxMemoryDC memdc(*input);
 	memdc.SetBackground(*wxWHITE_BRUSH);
 	memdc.Clear();	// sets input bitmap with white color
-
-	Refresh();
 }
 
 void DrawPane::resizeEvent(wxSizeEvent& event)
@@ -176,7 +182,17 @@ void DrawPane::onSpaceDown(wxKeyEvent& event)
 	if(event.GetKeyCode() == ' ')
 	{
 		wxString expr = GetExpression(input);
-		double result = Evaluate(expr);
+		double result = 0;
+		try
+		{
+			result = Evaluate(expr);
+		}
+		catch(...)
+		{
+			ClearPane();
+			Refresh();
+			return;
+		}
 		expr += " = ";
 		expr << result;
 		ResultOut(expr);
@@ -189,11 +205,8 @@ void DrawPane::onSpaceDown(wxKeyEvent& event)
 // temporary function
 void DrawPane::ResultOut(const wxString& result)
 {
-	delete input;
-	input = new wxBitmap(this->GetClientSize());
+	ClearPane();
 	wxMemoryDC memdc(*input);
-	memdc.SetBackground(*wxWHITE_BRUSH);
-	memdc.Clear();	// sets input bitmap with white color
 
 	memdc.DrawText(result, 0, 0);
 }
@@ -207,7 +220,7 @@ double Evaluate(const wxString& expr)
 	if(parser.compile(expression_str, expression) == 0)
 	{
 		wxString error_message;
-		error_message << "Error in expression \<" << expression_str << "\>" << std::endl;
+		error_message << "Error in expression \"" << expression_str << "\":\n";
 		error_message << parser.error().c_str();
 		wxMessageBox(error_message);
 		throw;

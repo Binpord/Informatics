@@ -6,6 +6,54 @@ std::vector<std::string> trainingFiles;
 // Trains cv::CvSVM from pictures, laying labeled in PicDir directory.
 void trainSVM(std::string dir)
 {
+	GetTrainingFiles(dir);
+
+	cv::HOGDescriptor hog(
+			cv::Size(28, 28),	// winSize = imageSize
+			cv::Size(14, 14),	// blockSize
+			cv::Size(7, 7),		// blockStride
+			cv::Size(14, 14),	// cellSize
+			9,			// nbins
+			// default values except last
+			1,
+			-1,
+			0,
+			0.2,
+			1,
+			64,
+			1
+			);
+	int HOG_size = 81;		// defined by hog constructor parameters
+	std::vector<float> hog_features;
+	cv::Mat trainingMat(trainingFiles.size(), HOG_size, CV_32FC1);
+
+	for(unsigned long i = 0; i < trainingFiles.size(); i++)
+	{
+		cv::Mat image = cv::imread(trainingFiles.at(i), cv::IMREAD_GRAYSCALE);
+		hog.compute(image, hog_features);
+
+		// filling training mat
+		for(unsigned long j = 0; j < hog_features.size(); j++)
+			trainingMat.at<float>(i, j) = hog_features.at(j);
+	}
+
+	int labelsArr[labels.size()];
+	for(unsigned long i = 0; i < labels.size(); i++)
+	{
+		labelsArr[i] = labels.at(i);
+	}
+
+	cv::Mat labelsMat(labels.size(), 1, CV_32S, labelsArr);
+
+	// trainig svm
+	cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
+	svm->setType(cv::ml::SVM::C_SVC);
+	svm->setKernel(cv::ml::SVM::RBF);
+	svm->setC(12.5);
+	svm->setGamma(0.50625);
+	
+	svm->train(trainingMat, cv::ml::ROW_SAMPLE, labelsMat);
+	svm->save("svm.yml");
 }
 
 void GetTrainingFiles(std::string dir)
@@ -47,7 +95,7 @@ std::vector<std::string> GetListFiles(std::string dir)
 	return result;
 }
 
-
+#ifdef __DEBUG
 void Print()
 {
 	GetTrainingFiles("test_dir");
@@ -60,3 +108,4 @@ void Print()
 		std::cout << i << ' ';
 	std::cout << std::endl;
 }
+#endif

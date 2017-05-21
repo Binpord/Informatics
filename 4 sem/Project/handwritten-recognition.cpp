@@ -114,22 +114,47 @@ wxString PerformRecognition(const cv::Mat& sumbol)
 #ifdef __DEBUG
 	cv::imwrite("test.jpg", sumbol);
 #endif
-	cv::Ptr<cv::ml::SVM> svm = cv::ml::StatModel::load<cv::ml::SVM>("classifier.yml");
+	cv::Ptr<cv::ml::SVM> svm = cv::ml::StatModel::load<cv::ml::SVM>("svm.yml");
+	cv::HOGDescriptor hog(
+			cv::Size(28, 28),	// winSize = imageSize
+			cv::Size(14, 14),	// blockSize
+			cv::Size(7, 7),		// blockStride
+			cv::Size(14, 14),	// cellSize
+			9,			// nbins
+			// default values except last
+			1,
+			-1,
+			0,
+			0.2,
+			1,
+			64,
+			1
+			);
+	int HOG_size = 81;		// defined by hog constructor parameters
+	std::vector<float> hog_features;
 
-	cv::Mat testMat = sumbol.clone().reshape(1,1);
-	testMat.convertTo(testMat, CV_32F);
+	//cv::Mat testMat = sumbol.clone().reshape(1,1);
+	//testMat.convertTo(testMat, CV_32F);
+
+	hog.compute(sumbol, hog_features);
+#ifdef __DEBUG
+	std::cout << hog_features.size() << std::endl;
+#endif
+	cv::Mat predictMat(hog_features);
+	predictMat = predictMat.t();
+	predictMat.convertTo(predictMat, CV_32F);
 	
 	int predicted = 0;
 
 	try
 	{
-		predicted = svm->predict(testMat);
+		predicted = svm->predict(predictMat);
 	}
 	catch(cv::Exception ex)
 	{}
 
 	wxString res;
-	res << predicted;
+	res += (char)predicted;
 	return res;
 }
 

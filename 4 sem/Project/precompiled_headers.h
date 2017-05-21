@@ -5,6 +5,7 @@
 #include <wx/string.h>
 #include <wx/dir.h>
 #include <wx/msgdlg.h>
+#include <wx/filefn.h>
 #include <opencv2/core.hpp>
 #include <opencv/cv.h>
 #include <opencv2/highgui.hpp>

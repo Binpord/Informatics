@@ -49,7 +49,7 @@ class MyApp: public wxApp
 	wxFrame *frame;
 	DrawPane * drawPane;
 };
- 
+
 /*
  * =====================================
  * MyApp part
@@ -70,6 +70,13 @@ bool MyApp::OnInit()
 	frame->SetAutoLayout(true);
  
 	frame->Show();
+
+	if(wxFileExists(wxT("svm.yml")) == false)
+	{
+		wxMessageBox(wxT("Oops. Seems that you don't have ready svm configuration. Programm will try to create it."));
+		trainSVM("training_files");
+	}
+	
 	return true;
 } 
 
@@ -200,7 +207,10 @@ void DrawPane::onSpaceDown(wxKeyEvent& event)
 	}
 }
 
-// temporary function
+// -------------------------------------
+// Other functions
+// -------------------------------------
+
 void DrawPane::ResultOut(const wxString& result)
 {
 	ClearPane();

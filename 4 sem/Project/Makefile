@@ -1,7 +1,7 @@
-CXXFLAGS += $(shell wx-config --cxxflags)
-CXXFLAGS += $(shell pkg-config --cflags opencv)
-LDLIBS += $(shell wx-config --libs)
-LDLIBS += $(shell pkg-config --libs opencv)
+override CXXFLAGS += $(shell wx-config --cxxflags)
+override CXXFLAGS += $(shell pkg-config --cflags opencv)
+override LDLIBS += $(shell wx-config --libs)
+override LDLIBS += $(shell pkg-config --libs opencv)
 
 precompiled: precompiled_headers.h
 	$(CXX) precompiled_headers.h $(CXXFLAGS)
@@ -21,9 +21,16 @@ handwritten-recognition: handwritten-recognition.h handwritten-recognition.cpp
 	ranlib libhandreco.a
 	rm handwritten-recognition.o
 
+trainSVM: trainSVM.h trainSVM.cpp
+	$(CXX) -c trainSVM.cpp $(CXXFLAGS)
+	$(AR) -rc libtrainsvm.a trainSVM.o
+	ranlib libtrainsvm.a
+	rm trainSVM.o
+
 calc: calculator-gui.cpp
-calc: LDLIBS += -L./
-calc: LDLIBS += -lhandreco
-calc: LDLIBS += -lwxconvertcv
+calc: override LDLIBS += -L./
+calc: override LDLIBS += -lhandreco
+calc: override LDLIBS += -lwxconvertcv
+calc: override LDLIBS += -ltrainsvm
 calc:
 	$(CXX) calculator-gui.cpp $(CXXFLAGS) $(LDLIBS) -o calc

@@ -14,6 +14,7 @@ protected:
 	wxBitmap* input;
 	wxPoint last_pos;
 	bool is_listing_result;
+	wxString expr;
 public:
 	DrawPane(wxFrame* parent);
 
@@ -186,7 +187,7 @@ void DrawPane::onSpaceDown(wxKeyEvent& event)
 	// evaluate on space
 	if(event.GetKeyCode() == ' ')
 	{
-		wxString expr = GetExpression(input);
+		expr = GetExpression(input);
 		double result = 0;
 		try
 		{

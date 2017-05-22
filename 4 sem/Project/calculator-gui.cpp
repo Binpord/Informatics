@@ -267,7 +267,7 @@ double Evaluate(const wxString& expr)
 		error_message << "Error in expression \"" << expression_str << "\":\n";
 		error_message << parser.error().c_str();
 		wxMessageBox(error_message);
-		throw;
+		throw 0;
 	}
 
 	return expression.value();

@@ -67,6 +67,10 @@ void GetTrainingFiles(std::string dir)
 			sumbol_examples.at(i) = dir + '/' + sumbol + '/' + sumbol_examples.at(i);
 
 		trainingFiles.insert(trainingFiles.end(), sumbol_examples.begin(), sumbol_examples.end());
+
+		if(sumbol.at(0) == ':')				// for correct labels, as exprtk does not support : as division
+			sumbol.at(0) = '/';
+
 		labels.insert(labels.end(), sumbol_examples.size(), sumbol.at(0));	// assuming only one-chared sumbols
 	}
 }

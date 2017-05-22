@@ -69,6 +69,7 @@ bool MyApp::OnInit()
  
 	frame->SetSizer(sizer);
 	frame->SetAutoLayout(true);
+	frame->SetIcon(wxIcon("icon.ico"));
  
 	frame->Show();
 
@@ -114,7 +115,7 @@ void DrawPane::paintEvent(wxPaintEvent& evt)
 // Draw on left-button click and drag
 void DrawPane::mouseMoved(wxMouseEvent& event)
 {
-	if(event.Dragging() == true)
+	if(event.Dragging() == true && event.LeftIsDown() == true)
 	{
 		wxClientDC dc(this);
 		wxMemoryDC memdc(*input);
@@ -184,6 +185,9 @@ void DrawPane::resizeEvent(wxSizeEvent& event)
 
 void DrawPane::onSpaceDown(wxKeyEvent& event)
 {
+	if(is_listing_result == true)
+		ClearPane();
+
 	// evaluate on space
 	if(event.GetKeyCode() == ' ')
 	{

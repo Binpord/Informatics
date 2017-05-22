@@ -2,6 +2,8 @@
 #include "handwritten-recognition.h"
 #include "trainSVM.h"
 
+#define max_font_size 60
+
 /*
  * =====================================
  * GUI classes
@@ -192,6 +194,14 @@ void DrawPane::onSpaceDown(wxKeyEvent& event)
 	if(event.GetKeyCode() == ' ')
 	{
 		expr = GetExpression(input);
+
+		if(expr.IsEmpty())
+		{
+			ClearPane();
+			Refresh();
+			return;
+		}
+
 		double result = 0;
 		try
 		{
@@ -220,8 +230,29 @@ void DrawPane::ResultOut(const wxString& result)
 {
 	ClearPane();
 	wxMemoryDC memdc(*input);
+	
+	wxBitmap* tmp = new wxBitmap(this->GetClientSize());
+	wxMemoryDC tmp1(*tmp);
 
-	memdc.DrawText(result, 0, 0);
+	int w, h, a, b;
+	GetClientSize(&w, &h);
+	int len = result.Len();
+	int s = w / len;
+	if (s > max_font_size)
+		s = max_font_size;
+
+	wxFont font(s, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false);
+	memdc.SetFont(font);
+	tmp1.SetFont(font);
+	tmp1.DrawText(result, 0, 0);
+	wxSize size = tmp1.GetTextExtent(result);
+
+	a = (w - size.GetWidth()) / 2;
+	b = (h - size.GetHeight()) / 2;
+
+	memdc.DrawText(result, a, b);
+
+	delete tmp;
 }
 
 double Evaluate(const wxString& expr)

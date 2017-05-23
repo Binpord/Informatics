@@ -16,6 +16,7 @@ protected:
 	wxBitmap* input;
 	wxPoint last_pos;
 	bool is_listing_result;
+	bool is_drawn;
 	wxString expr;
 public:
 	DrawPane(wxFrame* parent);
@@ -98,11 +99,14 @@ bool MyApp::OnInit()
 // Can also be triggeres by calling Refresh()/Update().
 DrawPane::DrawPane(wxFrame* parent):wxPanel(parent)
 {
+	// Cannot use ClearPane function as need to initialize ClientSize of this before,
+	//  which I cannot do here.
 	input = new wxBitmap(parent->GetClientSize());
 	wxMemoryDC memdc(*input);
 	memdc.SetBackground(*wxWHITE_BRUSH);
-	memdc.Clear();	// sets input bitmap with black color
+	memdc.Clear();	// sets input bitmap with white color
 	is_listing_result = false;
+	is_drawn = false;
 }
  
 void DrawPane::paintEvent(wxPaintEvent& evt)
@@ -127,6 +131,7 @@ void DrawPane::mouseMoved(wxMouseEvent& event)
 		Refresh();
 
 		last_pos = pos;
+		is_drawn = true;
 	}
 }
 
@@ -150,13 +155,14 @@ void DrawPane::mouseDown(wxMouseEvent& event)
 	Refresh();
 	
 	last_pos = pos;
+	is_drawn = true;
 }
 
 // Refresh on right-button click
 void DrawPane::rightClick(wxMouseEvent& event)
 {
 	ClearPane();
-
+	
 	Refresh();
 }
 
@@ -167,21 +173,50 @@ void DrawPane::ClearPane()
 	wxMemoryDC memdc(*input);
 	memdc.SetBackground(*wxWHITE_BRUSH);
 	memdc.Clear();	// sets input bitmap with white color
+	is_drawn = false;
 }
 
 void DrawPane::resizeEvent(wxSizeEvent& event)
 {
-	wxBitmap* tmp_input = new wxBitmap(event.GetSize());
-	wxMemoryDC src_dc(*input);
-	wxMemoryDC dst_dc(*tmp_input);
+	if (is_listing_result) {
+		ResultOut(expr);	
+	}
+	else {
+		wxSize sz = event.GetSize();
+		float in_w = float(input->GetWidth());
+		float in_h = float(input->GetHeight());
+		int w = sz.GetWidth();
+		int h = sz.GetHeight();
 
-	dst_dc.SetBackground(*wxWHITE_BRUSH);
-	dst_dc.Clear();
+		if ((is_drawn) && ((w < in_w) || (h < in_h))) {
+			if ((in_w/w) > (in_h/h)) {
+				h = in_h * w / in_w;
+			}
+			else if ((in_w/w) < (in_h/h)) {
+				w = in_w * h / in_h;
+			}
+			wxImage im = input->ConvertToImage();
+			wxPoint p (0, 0);
+			im.Rescale(w, h, wxIMAGE_QUALITY_BICUBIC); //Bicubis is the slowest quality, but others distort the data
+			im.Resize(sz, p, 255, 255, 255);
+			delete input;
+			input = new wxBitmap(im, wxBITMAP_SCREEN_DEPTH);
+		}
+		
+		else {
+			wxBitmap* tmp_input = new wxBitmap(event.GetSize());
+			wxMemoryDC src_dc(*input);
+			wxMemoryDC dst_dc(*tmp_input);
 
-	dst_dc.Blit(0, 0, input->GetWidth(), input->GetHeight(), &src_dc, 0, 0);
-	delete input;
-	input = tmp_input;
+			dst_dc.SetBackground(*wxWHITE_BRUSH);
+			dst_dc.Clear();
 
+			dst_dc.Blit(0, 0, in_w, in_h, &src_dc, 0, 0);
+			delete input;
+			input = tmp_input;
+		}
+	}
+	
 	Refresh();
 }
 

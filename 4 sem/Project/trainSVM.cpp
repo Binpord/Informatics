@@ -6,6 +6,11 @@ std::vector<std::string> trainingFiles;
 // Trains cv::CvSVM from pictures, laying labeled in PicDir directory.
 void trainSVM(std::string dir)
 {
+	if(wxDirExists(dir) == false)
+	{
+		wxMessageBox(wxT("Oops. Seems that you don't have training files. For further information please contact developer."));
+		exit(1);
+	}
 	GetTrainingFiles(dir);
 
 	cv::HOGDescriptor hog(
